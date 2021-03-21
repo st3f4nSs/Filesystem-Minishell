@@ -1,0 +1,134 @@
+
+Implementare lista:
+- am folosit 2 liste, una pentru fisiere si una pentru directoare;
+
+1) create_fs - creeaza radacina sistemului de fisiere (directorul cu numele "/");
+- functie pentru crearea, initializarea directorului root: alocam memorie pentru director si nume;
+- initializam lista de fisiere, de directoare si parintele directorului cu NULL;
+
+2) delete_fs - sterge doar directorul radacina al sistemului de fisiere;
+- functie pentru stergerea/eliberarea memoriei directorului root;
+- eiberam memoria pentru numele directorului("/");
+- eliberam memoria pentru director;
+
+3) touch <filename> <content> - adauga un fisier nou cu numele <filename>;
+si continutul <content> in directorul curent;
+- functie care insereaza un fisier in lista, in ordine lexicografica;
+- alocam memorie  pentru noul element din lista, pentru fisier in sine,
+pentru numele fisierului si pentru datele (continutul) fisierului;
+- initializam campurile fisierului cu valorile corespunzatoare;
+- avem 3 cazuri atunci cand inseram in lista de fisiere:
+  - daca lista este vida atunci inseram elementul si modificam capul
+de lista;
+  - daca elementul pe care vrem sa-l introducem este mai mic(lexicografic)
+decat primul element, atunci adaugam elementul nou pe prima pozitie
+si modificam capul de lista;
+  - daca nu este nici 1) si nici 2), elementul trebuie adaugat fie la
+mijloc fie la final atunci ne deplasam pana la cel mai mare element
+mai mic decat elementul nostru si il adaugam dupa acesta;
+
+4) mkdir <dirname> - adauga un director nou cu numele <dirname>;
+- functie care insereaza un director in lista, in ordine lexicografica;
+- alocam memorie pentru noul element din lista, pentru director in sine si
+pentru numele directorului;
+- initializam campurile directorului cu valorile corespunzatoare;
+- avem 3 cazuri atunci cand inseram in lista de directoare:
+  - daca lista este vida atunci inseram elementul si modificam capul
+de lista;
+  - daca elementul pe care vrem sa-l introducem este mai mic(lexicografic)
+decat primul element, atunci adaugam elementul nou pe prima pozitie
+si modificam capul de lista;
+  - daca nu este nici 1) si nici 2), elementul trebuie adaugat fie la
+mijloc fie la final atunci ne deplasam pana la cel mai mare element
+mai mic decat elementul nostru si il adaugam dupa acesta;
+
+5) ls - afiseaza in ordine lexicografica numele fisierelor ce se afla in directorul
+curent, urmate de numele directoarelor ce se afla in directorul curent;
+- aceasta functie parcurge cele 2 liste:  lista de fisiere si lista de directoare
+a directorului curent si le afiseaza;
+
+6) pwd - afiseaza calea absoluta a directorului curent, sub o forma similara celei din Linux
+(folosind delimitatorul '/');
+- am folosit recursivitate pe stiva;
+- am afisat parintele directorului curent, atat timp cat directorul curent este
+diferit de root, intr-o maniera recursiva;
+
+7) cd <dirname> - schimba directorul curent in directorul <dirname>, daca acesta exista;
+- pentru a implementa cd am folosit 2 functii: cd_1 si cd_2
+a) cd_1():
+- parcuregem lista de directoare si daca gasim un director cu numele cautat retinem
+pointerul catre acela si ii asociem directorului curent noua valoare;
+b) cd_2():
+- functia cd_2 ne duce catre directorul precedent, cd ..;
+- daca directorul curent nu este directorul root, atunci cand vom apela cd .. ne vom muta
+in directorul parinte al directorului curent;
+
+8) tree - afiseaza, incepand de la directorul curent, sub o forma arborescenta, continutul
+subsistemului de fisiere;
+- pentru implementarea comenzii tree am folosit functiile: "void spatii()", "void afisare_fisiere()"
+si "void tree()" care contine functiile precedente, parcurge intr-o maniera recursiva subsistemul si
+afiseaza fisierele si directoarele in modul dorit;
+a) spatii():
+- afiseaza spatii in numar de multiplii de 4, in cadrul functiei afisare_fisiere() si a
+functiei tree();
+b) afisare_fisiere():
+- afiseaza lista de fisiere, cu numarul de spatii corespunzator;
+- se parcurege lista de fisiere si se afiseaza;
+c) tree():
+- imbina functiile prezentate mai sus;
+- functia afiseaza intr-o maniera recursiva directoarele si fisierele asociate acestora punand
+un numar de 4*nivel spatii, unde nivel se refera la adancimea grafului( subsistemului de fisiere);
+
+9) rm <filename> - sterge fisierul cu numele <filename>, daca acesta exista, in caz
+contrar se afiseaza un mesaj de eroare;
+- daca lista este nevida, pornim de la al doilea element al listei si pentru fiecare
+element verificam daca urmatorul element este cel cautat. Ne uitam la urmatorul element
+pentru a putea realiza stergerea, avand nevoie de adresa elementului precedent, a elementului cautat;
+- cand gasim un fisier cu numele "nume" il stergem, modificam legaturile dintre pointeri, si
+dealocam memoria;
+- cea de-a doua parte a acestui algoritm verifica daca primul element este cel cautat, caz in
+care il stergem, modificam capul de lista si dealocam memoria;
+
+10) rmdir <dirname> - sterge directorul cu numele <dirname> din directorul curent (daca acesta exista)
+si tot continutul acestuia într-o maniera recursiva;
+- pentru implementarea comenzii rmdir am folosit urmatoarele functii: "void rm_d()", "void del_file_list()"
+, "void del_dir_list()", "void delete()" si functia "void rmdir()";
+a) rm_d():
+- aceeasi functionalitate ca si functia "rm()" diferenta fiind ca se aplica asupra directoarelor, se sterge
+un director din lista de directoare dupa nume;
+b) del_file_list():
+- functie care dealoca memoria pentru lista de fisiere din directorul curent;
+- parcurgem lista si stocam intr-o alta variabila pointerul lanodul curent din lista, pentru a-l putea
+sterge, trecem la nodul urmator si la final dealocam memoria pentru nodul curent(stocat in vriabila "j")
+, intai dealocam memoria numelui, apoi a continutului si abia la final nodul in sine. Aceasta operatie
+se efectueaza cat timp nu am ajuns la capatul de lista;
+- la final dupa ce lista este complet dealocata atribuim capului de lista valoarea NULL, semnificand faptul
+ca lista este vida;
+c) del_dir_list():
+- aceeasi functionalitate ca la functia "del_file_list()" doar ca asupra listelor de directoare;
+d) delete():
+- functie care sterge recursiv un director;
+- in urma apelarii acestei functii nu se va sterge directorul, lista de fisiere si lista de directoare
+asociata acestuia, adica nu va sterge primul nivel de sub director si directorul;
+e) rmdir():
+- functia rmdir sterge intreg directorul precizat, daca acesta exista, in caz contrar afiseaza un mesaj;
+- cauta directorul cu numele "nume" si in cazul in care exista foloseste functiile precizate mai sus si il sterge;
+- ultima parte a programului: functia delete sterge toate nivelele directorului in afara de primul nivel
+si de director in sine. Functia "del_dir_list()" sterge lista de fisiere de pe primul nivel. Functia
+"del_dir_list()" sterge lista de directoare de pe primul nivel. Functia "rm_d()" finalizeaza operatia
+de stergere, stergand doar directorul;
+
+11)*bonus* find <max_depth> <min_size> <max_size> <subcontent> - cauta, incepand de la directorul curent,
+cu o adancime maxima de <max_depth>, fisierele care au o dimensiune in intervalul [min_size, max_size] si
+care contin textul <subcontent>, iar apoi afiseaza numele fisierelor gasite.
+- functii folosite: "void prop()", "void find()".
+a) prop():
+- functie care afiseaza fisierele care au o anumita proprietate, pentru functia find;
+- parcurgem lista de fisiere si le afisam pe acelea cu respectiva proprietate;
+b) find():
+- cauta intr-o maniera recurisva fisierele care au dimensiunea intre 2 numere, care contin subsirul
+"subsir" si care se afla la o adancime de maxim depth;
+- pe langa aceasta functie in MAIN mai afisam si fisierele din lista de fisiere de pe nivelul 0,
+fisierele cu proprietate prop, daca exista;
+
+Functia "void parm()" - functie care identifica parametrii si ii stocheaza in siruri de caractere; 
